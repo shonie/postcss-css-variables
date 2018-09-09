@@ -1,0 +1,49 @@
+{
+	"definitions": {
+		"cssVariableObject": {
+			"value": "string",
+			"isImportant": "boolean",
+			"type": "object",
+			"required": ["value"]
+		},
+		"cssVariable": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"$ref": "#/definitions/cssVariableObject"
+				}
+			]
+		},
+		"cssVariables": {
+			"additionalProperties": {
+				"$ref": "#/definitions/cssVariable"
+			}
+		}
+	},
+    "properties": {
+		"preserve": {
+			"oneOf": [
+				{
+					"type": "boolean"
+				},
+				{
+					"type": "string",
+					"value": "computed"
+				}
+			]
+		},
+		"variables": {
+			"additionalProperties": {
+				"$ref": "#/definitions/cssVariables"
+			},
+			"type": "object"
+		},
+		"preserveInjectedVariables": {
+			"type": "boolean"
+		}
+	},
+	"type": "object",
+	"additionalProperties": false
+}

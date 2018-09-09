@@ -9,10 +9,12 @@
 var postcss = require('postcss');
 var extend = require('extend');
 
+var validateOptions = require('./lib/validate-options');
+var optionsSchema = require('./lib/OptionsSchema.json');
 var shallowCloneNode = require('./lib/shallow-clone-node');
 var resolveValue = require('./lib/resolve-value');
 var resolveDecl = require('./lib/resolve-decl');
-
+var ValidationError = require('./lib/ValidationError');
 
 // A custom property is any property whose name starts with two dashes (U+002D HYPHEN-MINUS)
 // `--foo`
@@ -42,7 +44,7 @@ function cleanUpNode(node) {
 		var nodeToRemove = nodeToPossiblyCleanUp.type !== 'root' ? nodeToPossiblyCleanUp : null;
 
 		if(nodeToRemove) {
-			// Get a reference to it before we remove
+			// Get a reference to it before we remove 
 			// and lose reference to the child after removing it
 			nodeToPossiblyCleanUp = nodeToRemove.parent;
 
@@ -69,6 +71,12 @@ var defaults = {
 };
 
 module.exports = postcss.plugin('postcss-css-variables', function(options) {
+	var validationErrors = validateOptions(optionsSchema, options || {});
+	
+	// if(validationErrors.length) {
+	// 	console.log('invalid');
+	// 	return validationErrors.map(ValidationError);
+	// }
 
 	var opts = extend({}, defaults, options);
 

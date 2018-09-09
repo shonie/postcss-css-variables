@@ -19,8 +19,19 @@ var MOCK_JS_VARIABLES =  {
 		value: '80px'
 	},
 	// Should be automatically prefixed with `--`
-	'js-defined-no-prefix': '#ff0000'
+	'js-defined-no-prefix': '#ff0000',
 };
+var INVALID_PRESERVE_OPTION = {
+	preserve: 'foo'
+}
+var INVALID_VARIABLE_OPTION = {
+	variables: {
+		'font-size': null
+	}
+}
+var INVALID_PRESERVE_INJECTED_VARIABLES_OPTION = {
+	preserveInjectedVariables: null
+}
 
 var testPlugin = function(filePath, expectedFilePath, options) {
 	options = options || {};
@@ -245,9 +256,38 @@ describe('postcss-css-variables', function() {
 			'remove-empty-rules-after-variable-collection'
 		);
 		test(
-			'should clean up neseted rules if we removed variable declarations to make it empty',
+			'should clean up nested rules if we removed variable declarations to make it empty',
 			'remove-nested-empty-rules-after-variable-collection'
 		);
 	});
-
+	
+	describe('json-schema validation', function() {
+		var anyCssFile = './test/fixtures/malformed-variable-usage.css';
+		var anyExpectedFile = './test/fixtures/malformed-variable-usage.expected.css';
+		
+		// it('throws with invalid options.preserve', function() {
+		// 	return expect(testPlugin(
+		// 		anyCssFile,
+		// 		anyExpectedFile,
+		// 		INVALID_PRESERVE_OPTION
+		// 		)
+		// 	).to.throw;
+		// });
+		it('throws with invalid options.variables', function() {
+			return expect(testPlugin(
+				anyCssFile,
+				anyExpectedFile,
+				INVALID_VARIABLE_OPTION
+				)
+			).to.throw;
+		});
+		// it('throws with invalid options.preserveInjectedVariables', function() {
+		// 	return expect(testPlugin(
+		// 		anyCssFile,
+		// 		anyExpectedFile,
+		// 		INVALID_PRESERVE_INJECTED_VARIABLES_OPTION
+		// 		)
+		// 	).to.throw();
+		// });
+	});
 });
